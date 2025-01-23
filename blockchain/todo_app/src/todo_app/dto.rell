@@ -1,0 +1,10 @@
+struct task_dto {
+    id: integer;
+    user: struct<user>;
+    title: text;
+    description: text;
+    is_completed: boolean;
+    due_date: timestamp;
+    created_at: timestamp;
+    updated_at: timestamp?;
+}

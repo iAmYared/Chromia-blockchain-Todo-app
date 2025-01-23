@@ -1,0 +1,46 @@
+query get_all_tasks(): list<task> {
+    require_user();
+    return task @* {};
+}
+
+query get_tasks_by_status(status: boolean): list<task> {
+    require_user();
+    return task @* {.is_completed == status};
+}
+
+enum task_sorting { NONE, PRIORITY_LOW, PRIORITY_MEDIUM, 
+PRIORITY_HIGH, DUE_DATE_ASC, DUE_DATE_DESC}
+
+query get_tasks_sorted_by_due_date(task_sorting) {
+    require_user();
+    return task @* {} (
+        @omit @sort when (task_sorting) {
+            DUE_DATE_DESC -> -.due_date;
+            DUE_DATE_ASC -> .due_date;
+            else -> .id;
+        },
+        $.to_struct()
+    );
+}
+
+query get_overdue_tasks(): list<task> {
+    require_user();
+    val now = now();
+    return task @* {.due_date < now};
+}
+
+query get_task_by_id(task_id: integer) {
+    val task = require_task(task_id);
+    return task;
+}
+
+query get_task_by_priority(priority: priority) {
+    return task @* {.priority == priority};
+}
+
+query search_tasks(search_query: text) {
+    require_user();
+    return task @* {
+        .title.contains(search_query)
+    };
+}

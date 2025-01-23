@@ -1,0 +1,3 @@
+// Test module using the scope of blockchain todo_app.
+@test module;
+
