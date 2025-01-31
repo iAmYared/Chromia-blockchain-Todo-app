@@ -4,13 +4,9 @@ import ^^.todo_app.*;
 import lib.ft4.accounts.strategies.open;
 import lib.ft4.accounts.strategies.{ register_account };
 
-operation register_user(name: text) {
-    val account = register_account(); // Ensures the transaction is signed
-    print("Account ID in register_user: " + account.id);
-    
-    create user (
-        name = name,
-        id = account.id,
-        account = account
-    );
-}
+operation register_user(name) {
+    val account = register_account(); // ensures the transaction is signed by a unique EVM account.
+    val user = create user (name, account.id, account);
+ 
+}  
+

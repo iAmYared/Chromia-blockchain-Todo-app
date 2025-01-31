@@ -2,6 +2,11 @@ blockchains:
   todo_app:
     module: main
     moduleArgs:
+      lib.ft4.core.accounts:
+        rate_limit:
+          max_points: 10
+          recovery_time: 5000
+          points_at_account_creation: 2    
       lib.ft4.core.auth:
         evm_signatures_authorized_operations:
           - register_user

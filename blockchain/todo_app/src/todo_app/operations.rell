@@ -1,40 +1,53 @@
-operation add_task(title: text, description: text, due_date: timestamp, priority:priority) {
+operation add_task(title: text, description: text, due_date: timestamp, status, priority) {
     val account = auth.authenticate();
     require(title != "", "Task title cannot be empty.");
-    require(due_date >= op_context.last_block_time, "Due date cannot be in the past.");
+    require(due_date >= now(), "Due date cannot be in the past.");
     create task (
-        user = user @ {account.id}, 
+        user = user @ {account.id},
         title = title,
         description = description,
-        due_date = due_date ,
+        status = status,
+        due_date = due_date,
         priority = priority
     );
 }
 
-operation update_task(task_id: integer, new_title: text?, new_description: text?, new_due_date: timestamp?, new_priority: priority?) {
+operation update_task(
+    task_id: byte_array,
+    new_title: text?,
+    new_description: text?,
+    new_due_date: timestamp?,
+    new_status: status?,
+    new_priority: priority?
+) {
     val task_to_update = require_task(task_id);
-    val now = op_context.last_block_time;
+    val now = now();
 
     if (new_due_date != null) {
         require(new_due_date >= now, "Due date cannot be in the past");
     }
 
-    update task @ {.id == task_to_update.id} (
-        title =  if (new_title != null)  new_title else task_to_update.title ,
+    update task @ { .id == task_to_update.id } (
+        title = if (new_title != null)  new_title else task_to_update.title,
         description = if (new_description != null) new_description else task_to_update.description,
+        status = if(new_status != null) new_status else task_to_update.status,
         due_date = if (new_due_date != null) new_due_date else task_to_update.due_date,
         updated_at = now,
         priority = if (new_priority != null) new_priority else task_to_update.priority
     );
 }
 
-operation mark_completed(task_id: integer) {
-    val task_to_mark_completed = require_task(task_id);
-    require(task_to_mark_completed.is_completed == false, "Task is already marked as completed.");
-    update task @ {.id == task_to_mark_completed.id} (.is_completed == true);
+operation update_status(task_id: byte_array, new_status: status) {
+    val task_to_update = require_task(task_id);
+    update task @ {.id == task_to_update.id} (.status = new_status);
 }
 
-operation delete_task(task_id: integer) {
+operation update_priority(task_id: byte_array, new_priority: priority) {
+    val task_to_update = require_task(task_id);
+    update task @ {.id == task_to_update.id} (.priority = new_priority);
+}
+
+operation delete_task(task_id: byte_array) {
     val task_to_delete = require_task(task_id);
-    delete task @ {.id == task_to_delete.id};
+    delete task @ { .id == task_to_delete.id };
 }

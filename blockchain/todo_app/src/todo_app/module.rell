@@ -1,19 +1,18 @@
 module;
 
 import lib.ft4.core.accounts.{account, create_account_with_auth, single_sig_auth_descriptor};
-import lib.ft4.external.auth.*;
+import lib.ft4.auth;
 
 function require_user() = auth.authenticate();
 function now() = op_context.last_block_time;
 
-function require_task(task_id: integer) {
+function require_task(task_id: byte_array) {
     val account = auth.authenticate();
     val task = require(task @? {.id == task_id}, "Couldn't find task with id %s".format(task_id));
     require(task.user.id == account.id, "You are not authorized to modify this task.");
     return task;
     
 }
-
 @extend(auth.auth_handler)
 function () = auth.add_auth_handler(
     flags = ["MySession"]

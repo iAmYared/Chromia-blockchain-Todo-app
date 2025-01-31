@@ -5,20 +5,26 @@ entity user {
 }
 
 entity task {
-    key id: integer = op_context.last_block_time;
-    index user;
+    key id: byte_array = op_context.transaction.tx_rid;
     mutable  title: text;
     mutable description: text;
-    mutable is_completed: boolean = false;
-    mutable due_date: timestamp;
+    mutable status;
+    mutable priority;
     created_at: timestamp = op_context.last_block_time;
+    mutable due_date: timestamp;
     mutable updated_at: timestamp = op_context.last_block_time;
-    mutable priority: priority;
+    index user;
     index title;
 }
 
 enum priority {
     low,
-    medium,
+    moderate,
     high
+}
+
+enum status {
+    not_started,
+    in_progress,
+    completed
 }
