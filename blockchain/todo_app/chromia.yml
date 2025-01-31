@@ -2,6 +2,8 @@ blockchains:
   todo_app:
     module: main
     moduleArgs:
+      todo_app:
+        admin_pubkey: x"03423C9DD69A93472DD5C14B903C2017664D2FEEA71CC7184DF3684EB72EBA62B2"
       lib.ft4.core.accounts:
         rate_limit:
           max_points: 10
