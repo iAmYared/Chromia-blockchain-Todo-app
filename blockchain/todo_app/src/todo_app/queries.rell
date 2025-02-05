@@ -1,7 +1,18 @@
-query get_all_tasks(): list<task> {
-    require_user();
-    return task @* {};
-}
+// query get_tasks(
+//     user_id: byte_array,
+//     pointer: integer,
+//     n_posts: integer
+//     ): (pointer: integer, tasks: struct<task_dto>) {
+//         val tasks = (user, task) @* {
+//             user.id == user_id,
+//             task.user == user
+//         } (
+//             @sort_desc @omit task.rowid,
+//             task_dto(
+//                 task.title
+//             )
+//         )
+//     }
 
 query get_tasks_by_status(status): list<task> {
     require_user();

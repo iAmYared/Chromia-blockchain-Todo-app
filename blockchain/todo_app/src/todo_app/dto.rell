@@ -1,10 +1,10 @@
 struct task_dto {
-    id: integer;
     user: struct<user>;
     title: text;
     description: text;
     stauts: status;
     priority: priority;
     created_at: timestamp;
+    due_date: timestamp;
     updated_at: timestamp?;
 }
